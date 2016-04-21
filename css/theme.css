@@ -1,0 +1,86 @@
+/* 后台管理CSS定义*/
+/**{margin: 0; padding: 0; border: 0;} 
+*/
+body { margin:0; padding:0;border: 0; }
+
+div,form,img,ul,ol,li,dl,dt,dd {margin: 0; padding: 0; border: 0;}
+/*h1,h2,h3,h4,h5,h6 { margin:0; padding:0;}*/
+table,td,tr,th{font-size:1em; margin:0; padding:0;border:0; }
+
+/* 链接颜色 */
+a:link {color: #777; text-decoration:none; font-size:12px;}
+a:visited {color:#777;text-decoration:none;font-size:12px;}
+a:hover {color: #333; text-decoration:underline;font-size:12px;}
+a:active {color: #777;text-decoration:none;font-size:12px;}
+/* 字体属性 [定义规则，小写f加属性名称] */
+.fB {font-weight: bold;}
+.fI {font-style: italic;}
+.fRed{ color:#FF0000}
+.fWhite{ color:#fff;}
+
+
+/* 后台背景定义 */
+#bodyBg1{
+	background-color:#4E8AC9;}		
+/*登陆*/
+#formLogin{ text-align:center;}
+#tableLogin td{ height:20px; background-color:#F5F6FB;}
+.roundCorderC{
+    width: 360px;
+    height: 260px;
+	border: 1px solid #fff;
+	color: #000;
+	margin-top: 30px;
+	border-radius: 8px;
+	background: white;
+	box-shadow: 2px 2px 35px #222;
+	background: -moz-linear-gradient(top, #fff, #efefef 8%);
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6), to(#f4f4f4));
+	margin-top:-2px;
+}
+.small {
+	font-family: "宋体";
+	font-size: 9pt;
+	line-height: 16pt;
+	color: #FFF;
+	width:360px;
+	margin-top:30px;
+}
+.bigtitle {
+	position:absolute;
+	font-size:34px;
+	font-family:"黑体";
+	color: #FFF;
+	width: 100%;
+	top:15%;
+	text-shadow:0 0 20px #000;
+}
+.loginout{
+	width:360;
+	position:absolute;
+	z-index:4;
+	left:50%;
+	top:20%;
+	margin-left:-180px;
+	margin-top:70px;
+}
+.btn-primary{
+	box-shadow: 0px 0px 10px #222;
+	color:#fff;
+	background-color:#428bca;
+	border-color:#357ebd;
+    width:100px;
+    height:45px;
+    border-radius: 8px;
+	font-size:16px;}
+.whitebelt{
+	position: absolute;
+	z-index:1;
+	top: 20%;
+	margin-top:110px;
+	width: 100%;
+	height: 160px;
+	background-color: #FFF;
+	box-shadow:0 0 10px #FFF;
+}
+

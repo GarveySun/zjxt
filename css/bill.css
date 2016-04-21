@@ -1,0 +1,57 @@
+@charset "gb2312";
+body{
+	background-color:#FFF;
+	}
+.topic {
+	font-family: "宋体";
+	font-size: 11pt;
+	vertical-align: middle;
+	line-height: 16pt;
+}
+.small {
+	font-family: "宋体";
+	font-size: 9pt;
+	vertical-align: middle;
+	line-height: 16pt;
+}
+input {
+	font-family: "宋体";
+	font-size: 9pt;
+	vertical-align: middle;
+	line-height: 12pt;
+}
+textarea{
+	font-family: "宋体";
+	font-size: 9pt;
+	vertical-align: middle;
+	line-height: 12pt;
+    width:450px;
+    height:100%;
+}
+
+a:link {
+	color: #0F56A3;
+	font-style: normal;
+	cursor: hand;
+	text-decoration: normal
+}
+a:visited {
+	color: #0F56A3;
+	font-style: normal;
+	text-decoration: normal
+}
+a:active {
+	color: #0F56A3;
+	font-style: normal;
+	text-decoration: normal
+}
+a:hover {
+	color: #CC0000;
+	font-style: bold;
+	text-decoration: none
+}
+.necessary{
+	border:solid 1px #009900}
+/*p{text-indent:2em;}
+*/
+
