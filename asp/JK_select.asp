@@ -87,6 +87,7 @@ var rolename = "<%=session("rolename")%>",
 	
 	
 	$("#count").on("click",function(e){
+		AddTime();
 		var condition = GetCondition();
 		var backdata = $.ajax({
 			url:"JK_select_tj_count.asp",
@@ -174,6 +175,19 @@ function DrawBar(name,data) {
 	window.myBar = new Chart(ctx).Bar(barChartData, {
 		responsive : true
 	});
+}
+
+function AddTime(){
+	var starttime = $("#startdate").val(),
+		endtime = $("#enddate").val();
+	$("#startdate").val(starttime+" 00:00:00");
+	$("#enddate").val(endtime+" 23:59:59");
+}
+
+function SearchNews(){
+	form1.action="JK_select_tj_serch.asp";
+	AddTime();
+	form1.submit();
 }
 </script>
 <style type="text/css">
@@ -298,7 +312,7 @@ div#alert{ color:red; display:none}
           
 
           <tr class="small">
-            <td align=center colspan=2><input type="submit" value="查 询" name="send" onClick="form1.action='JK_select_tj_serch.asp';"> 
+            <td align=center colspan=2><input type="button" value="查 询" name="send" onClick="SearchNews();"> 
               <input style="margin:0px 15px" type="button" id="count" value="统 计"> 
             <input type = "button" name = "button1" value = "返 回" onClick = "javascript:history.back(-1);"></td>
           </tr>

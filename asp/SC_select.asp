@@ -5,7 +5,7 @@
 var rolename = "<%=session("rolename")%>",
 	department = "<%=session("department")%>"
 	
- $(document).ready(function(e) {
+$(document).ready(function(e) {
 	$("#startid,#endid").keyup(function(e) {
         if ($("#startid").val()==="" && $("#endid").val()==="") {
 			$("#tips").hide();
@@ -21,6 +21,19 @@ var rolename = "<%=session("rolename")%>",
 		obj.add(new Option(department,department));
 	}
 });
+
+function AddTime(){
+	var starttime = $("#startdate").val(),
+		endtime = $("#enddate").val();
+	$("#startdate").val(starttime+" 00:00:00");
+	$("#enddate").val(endtime+" 23:59:59");
+}
+
+function SearchSuitcheck(){
+	form1.action="SC_select_tj_serch.asp";
+	AddTime();
+	form1.submit();
+}
 </script>
 <style type="text/css">
 <!--
@@ -100,7 +113,7 @@ td{border:solid #000000 1px}
           
 
           <tr class="small">
-            <td align=center colspan=2><input type="submit" value="²é Ñ¯" name="send" onClick="form1.action='SC_select_tj_serch.asp';"> 
+            <td align=center colspan=2><input type="button" value="²é Ñ¯" name="send" onClick="SearchSuitcheck();"> 
             <input type = "button" name = "button1" value = "·µ »Ø" onClick = "javascript:history.back(-1);"></td>
           </tr>
         </table>

@@ -67,7 +67,7 @@ $(document).ready(function(e) {
   <tr class="small" align="center" style="background-color:#BDFCC9"> 
     <td width="30" height="22">编号</td>
     <td width="100" height="22">部门</td>
-    <td width="100" height="22">时间</td>
+    <td width="110" height="22">时间</td>
     <td width="100" height="22">专柜</td>
     <td width="60" height="22">状态</td>
   </tr>
@@ -89,11 +89,11 @@ $(document).ready(function(e) {
 			<%
 		  case 99
 		    %>
-            审核通过<div class="tick"></div>
+            <div style="float:left;width:74px; text-align:right">审核通过</div><div class="mark tick"></div></div>
             <%
 		  case 1
 		     %>
-            未通过<div class="fork"></div>
+            <div style="float:left;width:70px; text-align:right">未通过</div><div class="mark fork"></div>
             <%
 		  case else
 		    response.Write("单据状态异常")
