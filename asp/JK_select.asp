@@ -4,17 +4,17 @@
 <script src="../js/Chart.min.js"></script>
 <script language = "JavaScript">
 var rolename = "<%=session("rolename")%>",
-	department = "<%=session("department")%>"
+	department = "<%=session("department")%>";
 
- $(document).ready(function(e) {
-	if (rolename === "超级管理员" ||rolename === "门店领导审批" ||department === "顾客服务部") {
-	}else{
+$(document).ready(function(e) {
+	//如果登陆账号不是以下几种，则删除责任单位只可选所在部门
+	if (rolename !== "超级管理员" && rolename !== "门店领导审批" && department !== "顾客服务部") {
 		var obj = document.getElementById("department");
 		obj.options.length = 0;
 		obj.add(new Option(department,department));
 	}
 	
-	
+	//动态classname and typename
     $("#classname").change(function(e) {
         if ($(this).val()=="违纪单")
 		{
@@ -77,17 +77,19 @@ var rolename = "<%=session("rolename")%>",
 		}
     });
 	
+	//如果单据编号字段被填入数值，则显示下单日期失效的效果及说明
 	$("#startid,#endid").keyup(function(e) {
         if ($("#startid").val()==="" && $("#endid").val()==="") {
 			$("#tips").hide();
+			$(".date").removeClass("disable");
 		}else{
 			$("#tips").show();
+			$(".date").addClass("disable");
 		}
     });
 	
-	
+	//给按钮绑定AJAX事件
 	$("#count").on("click",function(e){
-		AddTime();
 		var condition = GetCondition();
 		var backdata = $.ajax({
 			url:"JK_select_tj_count.asp",
@@ -103,7 +105,9 @@ var rolename = "<%=session("rolename")%>",
 	
 });
 
+//把设置存入对象
 function GetCondition(){
+	AddTime();
 	var condition = new Object();
 	condition.startid = $("#startid").val();
 	condition.endid = $("#endid").val();
@@ -126,6 +130,7 @@ function GetCondition(){
 	return condition	
 }
 
+//接收到数据库查询返回的信息后输出简报+画图
 function GetCountdata(datastr){
 	var data = eval(datastr);
 	var DepartmentName = new Array(),DepartmentCount = new Array(),i=0;
@@ -135,12 +140,14 @@ function GetCountdata(datastr){
 		i++;
 	}
 	$(".report").show();
-	var reportstr = "共查询到"+data.total+"张符合条件的反映单，按销售部分类汇总如下："
+	var totalstr = "共查询到"+data.total+"张符合条件的反映单。";
+	var indepartmentstr = "按销售部统计："
 	for (var i=0;i<DepartmentName.length;i++){
-		reportstr = reportstr + DepartmentName[i]+":"+DepartmentCount[i]+"、"
+		indepartmentstr = indepartmentstr + DepartmentName[i]+":"+DepartmentCount[i]+"、"
 	}
-	reportstr = reportstr.substr(0,reportstr.length-1);
-	$("#total").text(reportstr);
+	indepartmentstr = indepartmentstr.substr(0,indepartmentstr.length-1);
+	$("#total").text(totalstr);
+	$("#indepartment").text(indepartmentstr);
 	
 	if (isIE()){
 		$("#alert").show();
@@ -153,7 +160,7 @@ function isIE(){
 return navigator.appName.indexOf("Microsoft Internet Explorer")!=-1 && document.all;
 }
 
-
+//画柱状图（列名数组，数据数组）
 function DrawBar(name,data) {
 	var barChartData = {
 			labels : name,
@@ -171,12 +178,13 @@ function DrawBar(name,data) {
 		console.log("myBar is going to be deatory")
 		window.myBar.destroy();
 	}
-	var ctx = document.getElementById("canvas").getContext("2d");
+	var ctx = document.getElementById("depcanvas").getContext("2d");
 	window.myBar = new Chart(ctx).Bar(barChartData, {
 		responsive : true
 	});
 }
 
+//给日期加上时间
 function AddTime(){
 	var starttime = $("#startdate").val(),
 		endtime = $("#enddate").val();
@@ -184,6 +192,7 @@ function AddTime(){
 	$("#enddate").val(endtime+" 23:59:59");
 }
 
+//查询按钮函数
 function SearchNews(){
 	form1.action="JK_select_tj_serch.asp";
 	AddTime();
@@ -205,6 +214,9 @@ td{border:solid #000000 1px}
 div.report{width:700px; margin-left:auto; margin-right:auto; line-height:26px; display:none}
 h3{width:inherit; text-align:center}
 div#alert{ color:red; display:none}
+p#indepartment{text-align:left}
+div#total{ font-size:18px; font-weight:bold}
+.disable{ color:#999;}
 -->
 </style>
 <TITLE>查询总监电子反映单</TITLE>
@@ -217,11 +229,11 @@ div#alert{ color:red; display:none}
           <tr bgcolor="#00cc66">
             <td colspan="2" align="center"><span class="topic">查询总监电子反映单</span></td>
           </tr>
-          <tr class="small">
+          <tr class="small date">
             <td width="144" align="right">下单日期：</td>
             <td width="523">
-              <input name="startdate" type="text" id="startdate" style="width:100px" value="<%=Year(Now) & "-" & Month(Now) & "-01"%>" >&mdash;&mdash;
-            <input name="enddate" type="text" id="enddate"  style="width:100px" value="<%=Year(Now) & "-" & Month(Now) & "-" & Day(Now)%>" ></td>
+              <input name="startdate" class="date" type="text" id="startdate" style="width:100px" value="<%=Year(Now) & "-" & Month(Now) & "-01"%>" >&mdash;&mdash;
+            <input name="enddate" class="date" type="text" id="enddate"  style="width:100px" value="<%=Year(Now) & "-" & Month(Now) & "-" & Day(Now)%>" ></td>
           </tr>
           <tr class="small">
             <td width="144" align=right>单据编号：</td>
@@ -322,11 +334,19 @@ div#alert{ color:red; display:none}
 <div class="report">
 	<h3 align="center">统计情况汇总</h3>
     <div id="total" align="left"></div>
-    <br />
+    <p id="indepartment"></p>
+    <div class="chart">
+        <canvas id="depcanvas" height="400" width="700"></canvas>
+    </div>
+    <p id="inclassname"></p>
+    <div class="chart">
+        <canvas id="classcanvas" height="400" width="700"></canvas>
+    </div>
+    <p id="inzjname"></p>
+    <div class="chart">
+        <canvas id="zjcanvas" height="400" width="700"></canvas>
+    </div>
     <div id="alert">您的浏览器不支持绘制图表，请用新版本的360浏览器极速模式或者谷歌Chrome浏览器查询。</div>
-</div>
-<div class="chart">
-	<canvas id="canvas" height="400" width="700"></canvas>
 </div>
 </div>
 </BODY>

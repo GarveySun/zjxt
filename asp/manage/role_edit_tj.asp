@@ -256,7 +256,7 @@ elseif rs.recordcount=0 then
 		if request("checkbox21")=1 then 
 		rs.addnew
 			rs("rolename")=request("rolename")
-			rs("permissionname")="查询奖惩单"
+			rs("permissionname")="查询电子单"
 			rs("permissionurl")="/asp/JK_select.asp"
 			rs("roleid")=request("roleid")
 			rs("family")="查询"
@@ -267,7 +267,7 @@ elseif rs.recordcount=0 then
 		else
 		rs.addnew
 			rs("rolename")=request("rolename")
-			rs("permissionname")="查询奖惩单"
+			rs("permissionname")="查询电子单"
 			rs("permissionurl")="/asp/JK_select.asp"
 			rs("roleid")=request("roleid")
 			rs("family")="查询"

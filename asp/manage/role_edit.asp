@@ -193,11 +193,11 @@ a:hover {color:#CC0000;font-style:bold;text-decoration:none}
     </tr>
     <tr bgcolor="#FFFFFF" class=small>
       <td align=right height="24">查询：</td>
-      <td height="24">查询奖惩单</td>
+      <td height="24">查询电子单</td>
       <td><input name="checkbox21" type="checkbox" id="checkbox21" value="1"
 <%
 	Set rs = Server.CreateObject("ADODB.Recordset")
-	sql = "Select * from rolepermission where roleid='" & Request("roleid")&"' and enable=1 and permissionname like '查询奖惩单'"
+	sql = "Select * from rolepermission where roleid='" & Request("roleid")&"' and enable=1 and permissionname like '查询电子单'"
 	rs.open sql, conn, 3, 2 
 		If rs.Eof and rs.bof Then
 			response.Write ""
