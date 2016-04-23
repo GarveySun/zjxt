@@ -22,16 +22,9 @@ $(document).ready(function(e) {
 	}
 });
 
-function AddTime(){
-	var starttime = $("#startdate").val(),
-		endtime = $("#enddate").val();
-	$("#startdate").val(starttime+" 00:00:00");
-	$("#enddate").val(endtime+" 23:59:59");
-}
 
 function SearchSuitcheck(){
 	form1.action="SC_select_tj_serch.asp";
-	AddTime();
 	form1.submit();
 }
 </script>

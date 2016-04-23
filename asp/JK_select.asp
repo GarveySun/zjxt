@@ -107,7 +107,6 @@ $(document).ready(function(e) {
 
 //把设置存入对象
 function GetCondition(){
-	AddTime();
 	var condition = new Object();
 	condition.startid = $("#startid").val();
 	condition.endid = $("#endid").val();
@@ -139,6 +138,20 @@ function GetCountdata(datastr){
 		DepartmentCount[i] = data.department[key];
 		i++;
 	}
+	i=0;
+	var ClassName = new Array(),ClassNameCount = new Array();
+	for (var key in data.classname) {
+		ClassName[i] = decodeURI(key);
+		ClassNameCount[i] = data.classname[key];
+		i++;
+	}
+	i=0
+	var zjName = new Array(),zjCount = new Array();
+	for (var key in data.zjname) {
+		zjName[i] = decodeURI(key);
+		zjCount[i] = data.zjname[key];
+		i++;
+	}
 	$(".report").show();
 	var totalstr = "共查询到"+data.total+"张符合条件的反映单。";
 	var indepartmentstr = "按销售部统计："
@@ -146,13 +159,28 @@ function GetCountdata(datastr){
 		indepartmentstr = indepartmentstr + DepartmentName[i]+":"+DepartmentCount[i]+"、"
 	}
 	indepartmentstr = indepartmentstr.substr(0,indepartmentstr.length-1);
+	var inclassname = "按单据类别统计："
+	for (var i=0;i<ClassName.length;i++) {
+		inclassname += ClassName[i]+":"+ClassNameCount[i]+"、"
+	}
+	inclassname = inclassname.substr(0,inclassname.length-1);
+	var inzjname = "按下单账号统计："
+	for (var i=0;i<zjName.length;i++) {
+		inzjname += zjName[i]+":"+zjCount[i]+"、"
+	}
+	inzjname = inzjname.substr(0,inzjname.length-1);
 	$("#total").text(totalstr);
 	$("#indepartment").text(indepartmentstr);
+	$("#inclassname").text(inclassname);
+	$("#inzjname").text(inzjname);
+	
 	
 	if (isIE()){
 		$("#alert").show();
 	}else{
 	DrawBar(DepartmentName,DepartmentCount);
+	Drawclassnamepie(ClassName,ClassNameCount);
+	Drawzjnamepie(zjName,zjCount);
 	}
 }
 
@@ -184,18 +212,75 @@ function DrawBar(name,data) {
 	});
 }
 
-//给日期加上时间
-function AddTime(){
-	var starttime = $("#startdate").val(),
-		endtime = $("#enddate").val();
-	$("#startdate").val(starttime+" 00:00:00");
-	$("#enddate").val(endtime+" 23:59:59");
+function Drawclassnamepie(name,data) {
+	var pieData = new Array();
+	for (var i in name) {
+		pieData[i] = {
+			value:data[i],
+			color:getpiecolor(i,false),
+			highlight:getpiecolor(i,true),
+			label:name[i]
+		}
+	}
+	if (window.classPie) {
+		console.log("classPie is going to be deatory")
+		window.classPie.destroy();
+	}
+	var ctx = document.getElementById("classcanvas").getContext("2d");
+	window.classPie = new Chart(ctx).Pie(pieData);
 }
 
+function Drawzjnamepie(name,data) {
+	var pieData = new Array();
+	for (var i in name) {
+		pieData[i] = {
+			value:data[i],
+			color:getpiecolor(i+3,false),
+			highlight:getpiecolor(i+3,true),
+			label:name[i]
+		}
+	}
+	if (window.zjnamePie) {
+		console.log("zjnamePie is going to be deatory")
+		window.zjnamePie.destroy();
+	}
+	var ctx = document.getElementById("zjcanvas").getContext("2d");
+	window.zjnamePie = new Chart(ctx).Pie(pieData,{
+		percentageInnerCutout : 50,
+		animateScale : true
+		
+		});
+}
+
+function getpiecolor(index,highlight) {
+	var	color = [
+		"#DD0029",
+		"#FAF500",
+		"#51A625",
+		"#029197",
+		"#392884",
+		"#A3007F",
+		"#1E57A4"];
+	var highlightcolor = [
+		"#E54746",
+		"#FFF883",
+		"#5BBD2A",
+		"#00A7AE",
+		"#514695",
+		"#B04990",
+		"#4070B2"];
+	while (index > 6) {
+		index -= 7;
+	}
+	if (highlight) {
+		return highlightcolor[index];
+	}else{
+		return color[index];
+	}	
+}
 //查询按钮函数
 function SearchNews(){
 	form1.action="JK_select_tj_serch.asp";
-	AddTime();
 	form1.submit();
 }
 </script>
@@ -214,7 +299,7 @@ td{border:solid #000000 1px}
 div.report{width:700px; margin-left:auto; margin-right:auto; line-height:26px; display:none}
 h3{width:inherit; text-align:center}
 div#alert{ color:red; display:none}
-p#indepartment{text-align:left}
+div.report p{text-align:left}
 div#total{ font-size:18px; font-weight:bold}
 .disable{ color:#999;}
 -->

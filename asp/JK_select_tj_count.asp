@@ -19,9 +19,9 @@ Sort = Request("Sort")
 Page = Clng(Request("Page"))
 
 
-startdate=request("startdate")
-enddate=request("enddate")
-classname = jsdecodeURI(request("classname"))
+startdate=request("startdate")&" 00:00:00"
+enddate=request("enddate")&" 23:59:59"
+classname_jk = jsdecodeURI(request("classname"))
 typename_jk = jsdecodeURI(request("typename"))
 department = jsdecodeURI(request("department"))
 zj_pd_7 = jsdecodeURI(request("zj_pd_7"))
@@ -34,11 +34,11 @@ if request("startid")="" and request("endid")="" then
 	sql = sql &" and date between '"&startdate&"' and '"&enddate&"'"
 end if
 
-if classname<>"all" then
+if classname_jk<>"all" then
 	if typename_jk<>"all" then
-		sql=sql&" and n.classname='"&classname&"' and n.typename='"&typename_jk&"'"
+		sql=sql&" and n.classname='"&classname_jk&"' and n.typename='"&typename_jk&"'"
 	else
-		sql=sql&" and n.classname='"&classname&"'"
+		sql=sql&" and n.classname='"&classname_jk&"'"
 	end if
 end if
 
@@ -75,45 +75,116 @@ if request("endid")<>"" then
 end if
 
 sql=sql&" order by n.newsid desc" 
-'sql = "Select n.*,u.name from news n,users u where n.userid=u.userid and date between '2015-1-1' and '2017-1-1'"
 rs.open sql, conn, 3, 2 
 
-dim newscount,AlreadyCount,j,DepartmentCount(19),DepartmentName(19)
+dim newscount,AlreadyCount(2),j(2),DepartmentCount(19),DepartmentName(19),ClassName(5),ClassNameCount(5),zjName(20),zjCount(20)
 
 'j是记录当前循环中已经记录了几个统计分类
-j = 0
+j(0) = 0
+j(1) = 0
+j(2) = 0
 NewsCount = 0
-AlreadyCount = false
+AlreadyCount(0) = false
+AlreadyCount(1) = false
+AlreadyCount(2) = false
+'循环统计所有符合条件的单据
 while not rs.eof
-	for i=0 to j
+	'统计按责任部门分组
+	if rs("over_char2")<>"无" then
+		for i=0 to j(0)
+			if rs("over_char2") = DepartmentName(i) then
+				DepartmentCount(i) = DepartmentCount(i)+1
+				AlreadyCount(0) = true
+			end if
+		next
+		if AlreadyCount(0) then
+			AlreadyCount(0) = false
+		else
+			DepartmentName(j(0)) = rs("over_char2")
+			DepartmentCount(j(0)) = 1
+			AlreadyCount(0) = false
+			j(0)=j(0)+1
+		end if
+	end if
+	for i=0 to j(0)
 		if rs("department") = DepartmentName(i) then
 			DepartmentCount(i) = DepartmentCount(i)+1
-			AlreadyCount = true
+			AlreadyCount(0) = true
 		end if
 	next
-	if AlreadyCount then
-		AlreadyCount = false
+	if AlreadyCount(0) then
+		AlreadyCount(0) = false
 	else
-		DepartmentName(j) = rs("department")
-		DepartmentCount(j) = 1
-		AlreadyCout = false
-		j=j+1
+		DepartmentName(j(0)) = rs("department")
+		DepartmentCount(j(0)) = 1
+		AlreadyCount(0) = false
+		j(0)=j(0)+1
 	end if
+	
+	'按单据类别统计
+	for i=0 to j(1)
+		if rs("classname") = ClassName(i) then
+			ClassNameCount(i) = ClassNameCount(i)+1
+			AlreadyCount(1) = true
+		end if
+	next
+	if AlreadyCount(1) then
+		AlreadyCount(1) = false
+	else
+		ClassName(j(1)) = rs("classname")
+		ClassNameCount(j(1)) = 1
+		AlreadyCount(1) = false
+		j(1)=j(1)+1
+	end if
+
+	'按总监姓名统计
+	for i=0 to j(2)
+		if rs("name") = zjName(i) then
+			zjCount(i) = zjCount(i)+1
+			AlreadyCount(2) = true
+		end if
+	next
+	if AlreadyCount(2) then
+		AlreadyCount(2) = false
+	else
+		zjName(j(2)) = rs("name")
+		zjCount(j(2)) = 1
+		AlreadyCount(2) = false
+		j(2)=j(2)+1
+	end if
+
 	NewsCount=NewsCount+1
 	rs.movenext
 wend
 
-dim json,department
+dim json,department,classnamestr,zjnamestr
 json = "{""total"":"""&newscount&""","
 
-department = """department"":{"
+departmentstr = """department"":{"
 for i=0 to Ubound(DepartmentName)
 	if DepartmentName(i)<>"" then
-		department = department&""""&jsencodeURI(DepartmentName(i))&""":"""&DepartmentCount(i)&""","
+		departmentstr = departmentstr&""""&jsencodeURI(DepartmentName(i))&""":"""&DepartmentCount(i)&""","
 	end if
 next
-department = left(department,len(department)-1)&"}"
-json =json&department&"}"
+departmentstr = left(departmentstr,len(departmentstr)-1)&"}"
+
+classnamestr = """classname"":{"
+for i=0 to Ubound(ClassName)
+	if ClassName(i)<>"" then
+		classnamestr = classnamestr&""""&jsencodeURI(ClassName(i))&""":"""&ClassNameCount(i)&""","
+	end if
+next
+classnamestr = left(classnamestr,len(classnamestr)-1)&"}"
+
+zjnamestr = """zjname"":{"
+for i=0 to Ubound(zjName)
+	if zjName(i)<>"" then
+		zjnamestr = zjnamestr&""""&jsencodeURI(zjName(i))&""":"""&zjCount(i)&""","
+	end if
+next
+zjnamestr = left(zjnamestr,len(zjnamestr)-1)&"}"
+
+json =json&departmentstr&","&classnamestr&","&zjnamestr&"}"
 response.Write(json)
 
 
