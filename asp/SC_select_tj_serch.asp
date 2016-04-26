@@ -9,8 +9,8 @@ Key  = Request("Key")
 Sort = Request("Sort")
 Page = Clng(Request("Page"))
 
-startdate=request("startdate")
-enddate=request("enddate")
+startdate=request("startdate")&" 00:00:00"
+enddate=request("enddate")&" 23:59:59"
 
 sql = "Select * from suit_check where 1=1"
 

@@ -233,10 +233,11 @@ function Drawclassnamepie(name,data) {
 function Drawzjnamepie(name,data) {
 	var pieData = new Array();
 	for (var i in name) {
+		console.log(i)
 		pieData[i] = {
 			value:data[i],
-			color:getpiecolor(i+3,false),
-			highlight:getpiecolor(i+3,true),
+			color:getpiecolor(i,false),
+			highlight:getpiecolor(i,true),
 			label:name[i]
 		}
 	}
