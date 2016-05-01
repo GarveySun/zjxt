@@ -1,9 +1,6 @@
 <!--#include file ="../config.asp"-->
+<!--#include file ="../quit.asp"-->
 <%
-  If Session("logined") <> True Then
-     Response.Redirect("menu.asp?action=quit")
-  End If
-
 dim Conn, rs
   Set Conn = Server.CreateObject("ADODB.Connection")
     Conn.Open DBstr

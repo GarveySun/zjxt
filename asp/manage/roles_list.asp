@@ -49,7 +49,7 @@ end if
     <td width="250"><%=rs("rolename")%></td>
     <td width="200"><%if rs("enable")=1 then%>启用<%else%>禁用<%end if%></td>
     <td width="150"><a href="../../asp/manage/role_edit.asp?roleid=<%=rs("roleid")%>">编辑</a>
-     <a href="javascript:if(confirm('确实要删除角色“<%=rs("rolename")%>”吗?'))location='/asp/manage/role_delete.asp?userid=<%=rs("roleid")%>'">删除</a>
+     <a href="javascript:if(confirm('确实要删除角色“<%=rs("rolename")%>”吗?'))location='/asp/manage/role_delete.asp?roleid=<%=rs("roleid")%>'">删除</a>
    </td>
   </tr>
   <%

@@ -1,3 +1,4 @@
+<!--#include file ="asp/config.asp"-->
 <%
 if Session("logined")=True Then
 Response.Redirect("/asp/frame1.asp")
@@ -50,8 +51,8 @@ end if
 </form>
 <p align="center" class="small">Copyright 2015 All Rights Reserved | BHDL</p>
 </div>
-</body>
 <script type="text/javascript">
+var serverstr = <%=DBstr%>
 $(document).ready(function(e) {
     $("td a").click(function(e) {
         $(".alert").hide();
@@ -103,9 +104,6 @@ function checkform(){
 		return login;
 		}
 	};
-	
-
-   
-
 </script>
+</body>
 </html>

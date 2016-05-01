@@ -1,39 +1,35 @@
 <!--#include file ="../config.asp"-->
+<!--#include file ="../quit.asp"-->
 <%
-  If Session("logined") <> True Then
-     Response.Redirect("/asp/menu.asp?action=quit")
-  End If
-
-dim Conn, rs ,rs2
+dim Conn, rs ,rs1,rs2
   Set Conn = Server.CreateObject("ADODB.Connection")
   Conn.Open DBstr
 
-  Set rs = Server.CreateObject("ADODB.Recordset")
+  Set rs1 = Server.CreateObject("ADODB.Recordset")
   sql="SELECT * FROM rolepermission where rolename='"& Request("rolename")&"'"
-  rs.open sql,conn,3,2
-if rs.recordcount>=1 then
+  rs1.open sql,conn,3,2
+if rs1.recordcount>=1 then
 %>
 <script type="text/javascript">
 alert("有重名角色存在，请重新命名");
 window.history.back(-1);
 </script>
 <%
-elseif rs.recordcount=0 then
-  Set rs = Server.CreateObject("ADODB.Recordset")
+elseif rs1.recordcount=0 then
+  Set rs2 = Server.CreateObject("ADODB.Recordset")
   sql_role="insert into roles (rolename,enable) values ('"&request("rolename")&"','"&request("enable")&"')"
   conn.execute(sql_role)
-  Set rs2 = Server.CreateObject("ADODB.Recordset")
-  sql_select="select * from roles where rolename='"&request("rolename")&"'"
-  rs2.open sql_select, conn, 3, 2
-
+  sql_roleid = "select roleid from roles where rolename = '"&request("rolename")&"'"
+  rs2.open sql_roleid, conn, 1, 1
   Set rs = Server.CreateObject("ADODB.Recordset")
-  rs.open sql,conn,3,2
-  
+  sql_select="select * from rolepermission where roleid='"&request("roleid")&"'"
+  rs.open sql_select, conn, 3, 2
+
 		rs.addnew
 			rs("rolename")=request("rolename")
 			rs("permissionname")="首页"
 			rs("permissionurl")="/asp/see_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=1
 			rs("perorder")=1
@@ -45,7 +41,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="我的单据"
 			rs("permissionurl")="/asp/step_zj/JK_mynews.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=1
 			rs("perorder")=2
@@ -56,7 +52,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="我的单据"
 			rs("permissionurl")="/asp/step_zj/JK_mynews.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=0
 			rs("perorder")=2
@@ -69,7 +65,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="提交新单"
 			rs("permissionurl")="/asp/step_zj/JK_addNews.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=1
 			rs("perorder")=3
@@ -80,7 +76,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="提交新单"
 			rs("permissionurl")="/asp/step_zj/JK_addNews.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=0
 			rs("perorder")=3
@@ -93,7 +89,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="顾服审批"
 			rs("permissionurl")="/asp/step_bz/buzhang_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=1
 			rs("perorder")=4
@@ -104,7 +100,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="顾服审批"
 			rs("permissionurl")="/asp/step_bz/buzhang_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=0
 			rs("perorder")=4
@@ -117,7 +113,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="主管领导审批"
 			rs("permissionurl")="/asp/step_boss/boss_listnew.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=1
 			rs("perorder")=5
@@ -128,7 +124,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="主管领导审批"
 			rs("permissionurl")="/asp/step_boss/boss_listnew.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=0
 			rs("perorder")=5
@@ -141,7 +137,7 @@ elseif rs.recordcount=0 then
 '			rs("rolename")=request("rolename")
 '			rs("permissionname")="单据状态查看"
 '			rs("permissionurl")="/asp/step_bz/JK_selectnews_all.asp"
-'			rs("roleid")=request("roleid")
+'			rs("roleid")=rs2("roleid")
 '			rs("family")="单据"
 '			rs("enable")=1
 '			rs("perorder")=3
@@ -152,7 +148,7 @@ elseif rs.recordcount=0 then
 '			rs("rolename")=request("rolename")
 '			rs("permissionname")="单据状态查看"
 '			rs("permissionurl")="/asp/step_bz/JK_selectnews_all.asp"
-'			rs("roleid")=request("roleid")
+'			rs("roleid")=rs2("roleid")
 '			rs("family")="单据"
 '			rs("enable")=0
 '			rs("perorder")=3
@@ -165,7 +161,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="人力备案"
 			rs("permissionurl")="/asp/step_hr/hr_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=1
 			rs("perorder")=6
@@ -176,7 +172,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="人力备案"
 			rs("permissionurl")="/asp/step_hr/hr_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=0
 			rs("perorder")=6
@@ -189,7 +185,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="财务备案"
 			rs("permissionurl")="/asp/step_cw/cw_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=1
 			rs("perorder")=7
@@ -200,7 +196,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="财务备案"
 			rs("permissionurl")="/asp/step_cw/cw_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="单据"
 			rs("enable")=0
 			rs("perorder")=7
@@ -213,7 +209,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="我的申报"
 			rs("permissionurl")="/asp/suit_check/suit_check_mylist.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="工服"
 			rs("enable")=1
 			rs("perorder")=1
@@ -224,7 +220,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="我的申报"
 			rs("permissionurl")="/asp/suit_check/suit_check_mylist.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="工服"
 			rs("enable")=0
 			rs("perorder")=1
@@ -237,7 +233,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="工服审批"
 			rs("permissionurl")="/asp/suit_check/suit_check_reviewlist.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="工服"
 			rs("enable")=1
 			rs("perorder")=2
@@ -248,7 +244,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="工服审批"
 			rs("permissionurl")="/asp/suit_check/suit_check_reviewlist.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="工服"
 			rs("enable")=0
 			rs("perorder")=2
@@ -259,9 +255,9 @@ elseif rs.recordcount=0 then
 		if request("checkbox21")=1 then 
 		rs.addnew
 			rs("rolename")=request("rolename")
-			rs("permissionname")="查询奖惩单"
+			rs("permissionname")="查询电子单"
 			rs("permissionurl")="/asp/JK_select.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="查询"
 			rs("enable")=1
 			rs("perorder")=1
@@ -270,9 +266,9 @@ elseif rs.recordcount=0 then
 		else
 		rs.addnew
 			rs("rolename")=request("rolename")
-			rs("permissionname")="查询奖惩单"
+			rs("permissionname")="查询电子单"
 			rs("permissionurl")="/asp/JK_select.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="查询"
 			rs("enable")=0
 			rs("perorder")=1
@@ -284,8 +280,8 @@ elseif rs.recordcount=0 then
 		rs.addnew
 			rs("rolename")=request("rolename")
 			rs("permissionname")="工服审批单"
-			rs("permissionurl")="/asp/JK_select.asp"
-			rs("roleid")=request("roleid")
+			rs("permissionurl")="/asp/SC_select.asp"
+			rs("roleid")=rs2("roleid")
 			rs("family")="查询"
 			rs("enable")=1
 			rs("perorder")=2
@@ -295,8 +291,8 @@ elseif rs.recordcount=0 then
 		rs.addnew
 			rs("rolename")=request("rolename")
 			rs("permissionname")="工服审批单"
-			rs("permissionurl")="/asp/JK_select.asp"
-			rs("roleid")=request("roleid")
+			rs("permissionurl")="/asp/SC_select.asp"
+			rs("roleid")=rs2("roleid")
 			rs("family")="查询"
 			rs("enable")=0
 			rs("perorder")=2
@@ -309,7 +305,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="修改密码"
 			rs("permissionurl")="/asp/changepw.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=1
 			rs("perorder")=1
@@ -320,7 +316,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="修改密码"
 			rs("permissionurl")="/asp/changepw.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=0
 			rs("perorder")=1
@@ -333,7 +329,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="角色管理"
 			rs("permissionurl")="/asp/manage/roles_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=1
 			rs("perorder")=2
@@ -344,7 +340,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="角色管理"
 			rs("permissionurl")="/asp/manage/roles_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=0
 			rs("perorder")=2
@@ -357,7 +353,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="用户管理"
 			rs("permissionurl")="/asp/manage/users_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=1
 			rs("perorder")=3
@@ -368,7 +364,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="用户管理"
 			rs("permissionurl")="/asp/manage/users_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=0
 			rs("perorder")=3
@@ -381,7 +377,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="修改单据"
 			rs("permissionurl")="/asp/edit_jk/edit_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=1
 			rs("perorder")=3
@@ -392,7 +388,7 @@ elseif rs.recordcount=0 then
 			rs("rolename")=request("rolename")
 			rs("permissionname")="修改单据"
 			rs("permissionurl")="/asp/edit_jk/edit_list.asp"
-			rs("roleid")=request("roleid")
+			rs("roleid")=rs2("roleid")
 			rs("family")="管理"
 			rs("enable")=0
 			rs("perorder")=3
