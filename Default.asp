@@ -16,43 +16,38 @@ end if
 
 <body id="bodyBg1">
 <div class="whitebelt"></div>
+
+<div class="loginout">
 <div class="bigtitle" align="center">
   <p>总监反映单据系统2.0（测试）</p>
 </div>
-<div class="loginout">
 <form name="form1" method="post" action="/asp/userlogin.asp" onsubmit="return checkform();">
-  <table class="roundCorderC" id="tableLogin">
-    <tr height="50px">
-      <td align="center"><font size="5"> 用户登录</font></td></tr>
-    <tr class="alert error" style="display:none"><td align="center" id="errormsg" style="color:#F00; font-size:12px;">账号或密码不能为空</td></tr>
-    <tr>
-      <td align="center"><input style="width:150px;border:#AAA solid 1px" type="text" id="userid" name="userid" placeholder="用户名（工号）" autofocus><span class="alert errormsg" style="color:#F00; font-size:12px; display:none">*</span>
-        <input type="hidden" value="j" name="whereurl"></td>
-    </tr>
-    <tr>
-      <td align="center"><input style="width:150px; border:#AAA solid 1px" type="password" id="password" name="password" placeholder="密码（初始2）"><span class="alert errormsg" style="color:#F00; font-size:12px; display:none">*</span>
-        <input type="hidden" name="Userlogin" value="True"></td>
-    </tr>
-    <tr>
-      <td align="center">
-          <input type="submit" name="Submit" value="登 录" class="btn-primary" />
-          <input type="button" class="test" id="001" value="总监" />
-          <input type="button" class="test" id="002" value="部长" />
-          <input type="button" class="test" id="003" value="人力" />
-          <input type="button" class="test" id="004" value="领导" />
-          <input type="button" class="test" id="005" value="皮具" />
-          <input type="button" class="test" id="006" value="男装" />
-          <input type="button" class="test" id="007" value="财务" />
-        </td>
-    </tr>
-    <tr class="alert forgetpw" style="display:none;"><td align="center"><div style="width:170px; color:#F00; font-size:12px;">请将您的工号告知大楼计算机室（85260463）来重置您的密码。</div></td></tr>
-    <tr><td align="right"><a href="javascript:;">忘记密码</a></td></tr>
-  </table>
+	<div class="logtittle">用户登录</div>
+    <div class="errormsg alert" id="errormsg">error message</div>
+	<input class="typein" type="text" id="userid" name="userid" placeholder="用户名（工号）" autofocus><span class="errormsg" style="color:#F00; font-size:12px; display:none">*</span>
+	<input type="hidden" value="j" name="whereurl">
+	<input class="typein" type="password" id="password" name="password" placeholder="密码（初始2）"><span class="errormsg" style="color:#F00; font-size:12px; display:none">*</span>
+	<input type="hidden" name="Userlogin" value="True">
+	<input type="submit" name="Submit" value="登 录" class="btn-primary" />
+    
+    <div>
+          <input type="button" class="test" account="001" value="总监" />
+          <input type="button" class="test" account="002" value="部长" />
+          <input type="button" class="test" account="003" value="人力" />
+          <input type="button" class="test" account="004" value="领导" />
+          <input type="button" class="test" account="005" value="皮具" />
+          <input type="button" class="test" account="006" value="男装" />
+          <input type="button" class="test" account="007" value="财务" />
+	</div>
+        
+    <div class="forgetpw"><a href="javascript:;">忘记密码</a></div>
 </form>
-<p align="center" class="small">Copyright 2015 All Rights Reserved | BHDL</p>
+
+<div class="copyr">
+<p align="center" class="small">Copyright 2016 All Rights Reserved | BHDL</p>
+</div>
 </div>
 <script type="text/javascript">
-var serverstr = <%=DBstr%>
 $(document).ready(function(e) {
     $("td a").click(function(e) {
         $(".alert").hide();
@@ -60,7 +55,7 @@ $(document).ready(function(e) {
     });
 	
 	$(".test").on("click",function(e){
-		$("#userid").val($(this).attr("id"));
+		$("#userid").val($(this).attr("account"));
 		$("#password").val("2");
 		window.form1.submit();
 	});
@@ -69,14 +64,14 @@ $(document).ready(function(e) {
 
 function checkform(){
 	if (document.form1.userid.value=="" || document.form1.password.value==""){
-        $(".alert").hide();
-		$("#errormsg").text("账号或密码不能为空").parent(".error").show();
+        $(".errormsg").hide();
+		$("#errormsg").text("账号或密码不能为空").show();
 		document.form1.password.value="";
 		document.form1.userid.focus();
 	    return false;}
 	else if (document.form1.userid.value.length>12||document.form1.password.value.length>12){
-		$(".alert").hide();
-		$("#errormsg").text("不正确的账号或密码格式，请重新输入").parent(".error").show();
+		$(".errormsg").hide();
+		$("#errormsg").text("不正确的账号或密码格式，请重新输入").show();
 		document.form1.password.value="";
 		document.form1.userid.value="";
 		document.form1.userid.focus();
@@ -90,12 +85,12 @@ function checkform(){
 			datatype:"txt",
 			async:false,
 			success:function(data){
-				if (data=="yes"){
+				if (data==="yes"){
 					login=true;
 				}else{
 					login=false;
-					$(".alert").hide();
-					$("#errormsg").text("账号或密码输入错误，请重新输入").parent(".error").show();
+					$(".errormsg").hide();
+					$("#errormsg").text("账号或密码输入错误，请重新输入").show();
 					document.form1.password.value="";
 					document.form1.userid.focus();
 				}
@@ -103,7 +98,10 @@ function checkform(){
 		});
 		return login;
 		}
-	};
+}
+	
+console.log("DBname:<%=DBname%>");
+console.log("Server IP:<%=Serverip%>");
 </script>
 </body>
 </html>

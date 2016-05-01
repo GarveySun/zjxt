@@ -31,7 +31,6 @@ $(document).ready(function(e) {
 <% end if %>
 </head>
 <body bgcolor="#FFEFBF">
-<br/><br/><br/>
 <div align="center">
   <table width="100%" valign="top" border="0" height="200" cellpadding="0" cellspacing="0">
       <tr bgcolor="#FFEFBF">

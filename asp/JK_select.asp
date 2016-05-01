@@ -2,11 +2,16 @@
 <HEAD>
 <script src="../jquery/jquery-1.9.1.min.js"></script>
 <script src="../js/Chart.min.js"></script>
+<script src="../js/config.js"></script>
 <script language = "JavaScript">
 var rolename = "<%=session("rolename")%>",
 	department = "<%=session("department")%>";
 
 $(document).ready(function(e) {
+	//通过自定义方法为部门选项增加部门
+	Config.Setdepartment("department");
+	//增加单据类别
+	Config.Setclassname("classname");
 	//如果登陆账号不是以下几种，则删除责任单位只可选所在部门
 	if (rolename !== "超级管理员" && rolename !== "门店领导审批" && department !== "顾客服务部") {
 		var obj = document.getElementById("department");
@@ -15,67 +20,21 @@ $(document).ready(function(e) {
 	}
 	
 	//动态classname and typename
-    $("#classname").change(function(e) {
-        if ($(this).val()=="违纪单")
-		{
-			$("#typename option").remove();
-		    $("#typename").append("<option value='all'>全部</option>");
-			$("#typename").append("<option value='使用手机'>使用手机</option>");
-			$("#typename").append("<option value='串岗'>串岗</option>");
-			$("#typename").append("<option value='聊天'>聊天</option>");
-			$("#typename").append("<option value='柜台说笑'>柜台说笑</option>");
-			$("#typename").append("<option value='私人物品'>私人物品</option>");
-			$("#typename").append("<option value='吃东西'>吃东西</option>");
-			$("#typename").append("<option value='食品带入柜台'>食品带入柜台</option>");
-			$("#typename").append("<option value='上班购物'>上班购物</option>");
-			$("#typename").append("<option value='做与工作无关的事'>做与工作无关的事</option>");
-			$("#typename").append("<option value='趴靠柜台'>趴靠柜台</option>");
-			$("#typename").append("<option value='电脑上网'>电脑上网</option>");
-			$("#typename").append("<option value='违纪警示'>违纪警示</option>");
-			$("#typename").append("<option value='其它'>其它</option>");
+	$("#classname").change(function(e){
+		if ($(this).val()==="案例单"){
+			var obj = document.getElementById("department");
+			obj.options.length = 0;
+			$("#department").append("<option value='all' selected>全部</option>");
+			Config.Setdepartment("department");
+		}else{
+			var obj = document.getElementById("department");
+			obj.options.length = 0;
+			obj.add(new Option(department,department));
 		}
-		else if ($(this).val()=="案例单")
-		{
-			$("#typename option").remove();
-		    $("#typename").append("<option value='all'>全部</option>");
-			$("#typename").append("<option value='服务投诉'>服务投诉</option>");
-			$("#typename").append("<option value='商品投诉'>商品投诉</option>");
-			$("#typename").append("<option value='违纪共性问题'>违纪共性问题</option>");
-			$("#typename").append("<option value='优质服务'>优质服务</option>");
-			$("#typename").append("<option value='其它'>其它</option>");
-		}
-		else if ($(this).val()=="情况反映单")
-		{
-			$("#typename option").remove();
-		    $("#typename").append("<option value='all'>全部</option>");
-			$("#typename").append("<option value='设备设施'>设备设施</option>");
-			$("#typename").append("<option value='环境卫生'>环境卫生</option>");
-			$("#typename").append("<option value='视觉陈列题'>视觉陈列</option>");
-			$("#typename").append("<option value='物价质量'>物价质量</option>");
-			$("#typename").append("<option value='仪容仪表'>仪容仪表</option>");
-			$("#typename").append("<option value='班前会'>班前会</option>");
-			$("#typename").append("<option value='营销策划'>营销策划</option>");
-			$("#typename").append("<option value='应知应会'>应知应会</option>");
-			$("#typename").append("<option value='联合检查'>联合检查</option>");
-			$("#typename").append("<option value='经营管理'>经营管理</option>");
-			$("#typename").append("<option value='其它'>其它</option>");
-		}
-		else if ($(this).val()=="表扬单")
-		{
-			$("#typename option").remove();
-		    $("#typename").append("<option value='all'>全部</option>");
-			$("#typename").append("<option value='顾客表扬'>顾客表扬</option>");
-			$("#typename").append("<option value='热情服务'>热情服务</option>");
-			$("#typename").append("<option value='拾金不昧'>拾金不昧</option>");
-			$("#typename").append("<option value='统一规范'>统一规范</option>");
-			$("#typename").append("<option value='其它'>其它</option>");
-		}
-		else
-		{
-			$("#typename option").remove();
-		    $("#typename").append("<option value='all'>全部</option>");
-		}
-    });
+		$("#typename option").remove();
+		$("#typename").append("<option value='all' selected>全部</option>");
+		Config.Changetypename("classname","typename");
+	});
 	
 	//如果单据编号字段被填入数值，则显示下单日期失效的效果及说明
 	$("#startid,#endid").keyup(function(e) {
@@ -87,7 +46,7 @@ $(document).ready(function(e) {
 			$(".date").addClass("disable");
 		}
     });
-	
+
 	//给按钮绑定AJAX事件
 	$("#count").on("click",function(e){
 		var condition = GetCondition();
@@ -101,9 +60,13 @@ $(document).ready(function(e) {
 			}
 		});
 	});
-	
-	
 });
+
+function UnlockDepartment(){
+	var obj = document.getElementById("department");
+	obj.options.length = 0;
+	obj.add(new Option(department,department));
+}
 
 //把设置存入对象
 function GetCondition(){
@@ -284,6 +247,7 @@ function SearchNews(){
 	form1.action="JK_select_tj_serch.asp";
 	form1.submit();
 }
+
 </script>
 <style type="text/css">
 <!--
@@ -332,10 +296,6 @@ div#total{ font-size:18px; font-weight:bold}
             <td>
         <select style="width:100px" name="classname" id="classname" > 
         <option  value="all" selected>全部</option> 
-        <option value="违纪单">违纪单</option>
-        <option value="案例单">案例单</option>
-        <option value="情况反映单">情况反映单</option>
-        <option value="表扬单">表扬单</option>
         </select>&mdash;&mdash;
 		<select style="width:100px"  name="typename" id="typename"> 
         <option  value="all" selected>全部</option> 
@@ -346,26 +306,6 @@ div#total{ font-size:18px; font-weight:bold}
             <td align=right>责任单位：</td>
             <td><select style="width:140px"  name="department" id="department">
               <option value="all" selected>全部</option>
-              <option value="总经办">总经办</option>
-              <option value="市场营销部">市场营销部</option>
-              <option value="业务营运部">业务营运部</option>
-              <option value="财务部">财务部</option>
-              <option value="党委工作部">党委工作部</option>
-              <option value="工会">工会</option>
-              <option value="人力资源部">人力资源部</option>
-              <option value="顾客服务部">顾客服务部</option>
-              <option value="安全保卫部">安全保卫部</option>
-              <option value="行政后勤部">行政后勤部</option>
-              <option value="储运部">储运部</option>
-              <option value="化妆销售部">化妆销售部</option>
-              <option value="珠宝精品销售部">珠宝精品销售部</option>
-              <option value="女装销售部">女装销售部</option>
-              <option value="男装运动销售部">男装运动销售部</option>
-              <option value="皮具销售部">皮具销售部</option>
-              <option value="家用儿童销售部">家用儿童销售部</option>
-              <option value="超市销售部">超市销售部</option>
-              <option value="功能销售部">功能销售部</option>
-              <option value="特卖场销售部">特卖场销售部</option>
             </select></td>
           </tr>
           <tr class="small">
