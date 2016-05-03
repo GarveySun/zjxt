@@ -1,4 +1,4 @@
-<!--#include file="../md5.asp"-->
+<!--#include file ="../config.asp"-->
 <%
   If Session("logined") <> True Then
      Response.Redirect("/asp/menu.asp?action=quit")
@@ -6,7 +6,7 @@
 
 dim Conn, rs
   Set Conn = Server.CreateObject("ADODB.Connection")
-  Conn.Open "Driver={SQL Server};Database=WebDB;Server=CC-SERVER;uid=sa;pwd=Cc-0463"
+  Conn.Open DBstr
   Set rs = Server.CreateObject("ADODB.Recordset")
   sql="SELECT * FROM users where userid='"& Request("userid")&"'"
   rs.open sql,conn,3,2

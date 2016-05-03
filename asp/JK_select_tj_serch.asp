@@ -61,7 +61,6 @@ end if
 
 sql=sql&" order by n.newsid desc" 
 
-response.Write(sql)
 rs.open sql, conn, 3, 2 
 rs.PageSize = 1000 '每页显示记录数
 If Page < 1 then Page = 1

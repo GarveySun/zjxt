@@ -1,5 +1,5 @@
 <%
-DBname = "WebDB_test"
-Serverip = "192.168.0.92"
+DBname = "WebDB"
+Serverip = "172.16.2.14"
 DBstr = "Driver={SQL Server};Database="&DBname&";Server="&Serverip&";uid=sa;pwd=Cc-0463"
 %>
