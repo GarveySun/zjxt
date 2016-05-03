@@ -28,10 +28,11 @@ $(document).ready(function(e) {
 				 $(this).removeClass("mouse");
 		});
 		
-	$(".listtd:not(.option)").click(function(e) {
-        newsid=$(this).parent().find("td").eq(0).text();
-		openurl="/asp/JK_seenews.asp?newsid="+newsid;
-	    window.open(openurl,"newsid:"+newsid,'height=600,width=750,top=100,left=100,toolbar=no');
+    $(".listtd:not(.option)").click(function(e) {
+        var newsid=$(this).parent().find("td").eq(0).text();
+		var openurl="/asp/JK_seenews.asp?newsid="+newsid;
+		var setting = "height=600,width=750,top=100,left=100,toolbar=no";
+		window.open(openurl,"SeeNews",setting);
     });
 });
 </script>
