@@ -13,7 +13,16 @@ dim Conn, rs
 %>
 <HTML>
 <HEAD>
-<script src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
+<script src="../../jquery/jquery-1.9.1.min.js"></script>
+<script src="../../js/config.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	//通过自定义方法为部门选项增加部门
+	Config.Setdepartment("department");
+
+});
+</script>
+
 <style type="text/css">
 <!--
 .topic { font-family: "宋体"; font-size: 11; vertical-align: middle; line-height:16pt;}
@@ -55,26 +64,6 @@ input,textarea { font-family: "宋体"; font-size:  9pt; vertical-align: middle; l
       <td height="24" colspan="2">
                 <select name="department" id="department">
       	<option value="" selected>请选择</option>
-		<option value="总经办">总经办</option>
-        <option value="市场营销部">市场营销部</option>
-        <option value="业务营运部">业务营运部</option>
-        <option value="财务部">财务部</option>
-        <option value="党委工作部">党委工作部</option>
-        <option value="工会">工会</option>
-        <option value="人力资源部">人力资源部</option>
-        <option value="顾客服务部">顾客服务部</option>
-        <option value="安全保卫部">安全保卫部</option>
-        <option value="后勤管理部">后勤管理部</option>
-        <option value="储运部">储运部</option>
-        <option value="化妆销售部">化妆销售部</option>
-        <option value="珠宝精品销售部">珠宝精品销售部</option>
-        <option value="女装销售部">女装销售部</option>
-        <option value="皮具销售部">皮具销售部</option>
-        <option value="男装运动销售部">男装运动销售部</option>
-        <option value="家用儿童销售部">家用儿童销售部</option>
-        <option value="功能销售部">功能销售部</option>
-        <option value="超市销售部">超市销售部</option>
-        <option value="特卖场销售部">特卖场销售部</option>
       </select>
       </td>
     </tr>
