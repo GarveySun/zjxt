@@ -44,6 +44,17 @@ $(document).ready(function(e) {
 		$("#typename").append("<option value='all' selected>全部</option>");
 		Config.Changetypename("classname","typename");
 	});
+	
+	$("#typename").on("change",function(e){
+		var val_typename = $(this).val();
+		if (val_typename==="其它") {
+			$(this).attr("name","nottypename");
+			$("#other_typename").attr("name","typename").show();
+		}else{
+			$(this).attr("name","typename");
+			$("#other_typename").attr("name","nottypename").hide();
+		}
+	});			
 });
 </script>
 <STYLE type=text/css>
@@ -74,6 +85,7 @@ A:active {
 .h1 {
 	COLOR: #000000; FONT-FAMILY: "宋体"; FONT-SIZE: 12px; LETTER-SPACING: 3px; TEXT-DECORATION: none; TEXT-INDENT: 20px; VERTICAL-ALIGN: 500%
 }
+input#other_typename{display:none}
 </STYLE>
 <TITLE>填写反映单</TITLE>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html" charset="GB2312">
@@ -94,6 +106,7 @@ A:active {
 		<select name="typename" id="typename"> 
         <option  value="" selected>- 请选择 -</option> 
         </select>
+        <input type="text" id="other_typename" value="" size="20" placeholder="请填写">
       </td>
     </tr>
     <tr class=small>

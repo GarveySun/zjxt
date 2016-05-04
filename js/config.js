@@ -1,4 +1,6 @@
 var Config = {
+	
+//部门名称数组，修改此处能把所有页面呈现出的部门改掉，但已经写入数据库的部分（如一个账号的所属部门）无能为力
 	departments : [
 	"总经办",
 	"市场营销部",
@@ -20,11 +22,17 @@ var Config = {
 	"超市销售部",
 	"功能销售部",
 	"特卖场销售部"],
-	
+
+
+/*
+如需新增单据类型，按照如下格式增加即可。
+一个classnames数组下有若干元素，每个元素是该大类的对象，对象下有大类名称属性和小类数组。
+要增加小类的话“其它”一定要在最后，否则将导致JK_select.asp的Writeothertypename()函数出错导致查询单据时产生遗漏	
+*/
 	classnames : [
 		{ classname : "违纪单" ,
 		typename : ["使用手机","串岗","聊天","柜台说笑","私人物品","吃东西","食品带入柜台",
-				"上班购物","做与工作无关的事","趴靠柜台","电脑上网","违纪警","其它"]
+				"上班购物","做与工作无关的事","趴靠柜台","电脑上网","违纪警示","其它"]
 		},
 		{ classname: "案例单" ,
 		typename : ["服务投诉","商品投诉","违纪共性问题","优质服务","其它"]
@@ -50,7 +58,6 @@ var Config = {
 	
 	Changetypename:function (classid,typeid){
 		var classname = $("#"+classid).val();
-		console.log(classname);
 		for (var i=0;i<this.classnames.length;i++){
 			if (classname === this.classnames[i].classname){
 				for (var j=0;j<this.classnames[i].typename.length;j++){

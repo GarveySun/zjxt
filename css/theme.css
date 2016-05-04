@@ -58,7 +58,7 @@ a:active {color: #777;text-decoration:none;font-size:12px;}
 	box-shadow: 2px 2px 35px #222;
 	background: -moz-linear-gradient(top, #fff, #efefef 8%);
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6), to(#f4f4f4));
-	background: #FFE;
+	background: #FFF;
 }
 .btn-primary{
 	display:block;

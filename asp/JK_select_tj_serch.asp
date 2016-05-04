@@ -20,10 +20,19 @@ if request("startid")="" and request("endid")="" then
 end if
 
 if request("classname")<>"all" then
-	if request("typename")<>"all" then
+	if request("typename")="all" then
+		sql=sql&" and n.classname='"&request("classname")&"'"
+	elseif request("typename")<>"其它"then
 		sql=sql&" and n.classname='"&request("classname")&"' and n.typename='"&request("typename")&"'"
 	else
-		sql=sql&" and n.classname='"&request("classname")&"'"
+		dim othertype,sqltype
+		othertype = split(request("ifothers"),",")
+		sqltype = " and ("
+		for i=0 to Ubound(othertype)
+			sqltype = sqltype&" n.typename<> '"&othertype(i)&"' or"
+		next
+		sqltype = left(sqltype,len(sqltype)-3)&")"
+		sql=sql&" and n.classname='"&request("classname")&"'"&sqltype
 	end if
 end if
 
@@ -60,7 +69,6 @@ if request("endid")<>"" then
 end if
 
 sql=sql&" order by n.newsid desc" 
-
 rs.open sql, conn, 3, 2 
 rs.PageSize = 1000 '每页显示记录数
 If Page < 1 then Page = 1

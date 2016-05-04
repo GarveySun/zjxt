@@ -26,6 +26,7 @@ typename_jk = jsdecodeURI(request("typename"))
 department = jsdecodeURI(request("department"))
 zj_pd_7 = jsdecodeURI(request("zj_pd_7"))
 name_jk = jsdecodeURI(request("name"))
+ifothers_jk = jsdecodeURI(request("ifothers"))
 
 sql = "Select n.*,u.name from news n,users u where n.userid=u.userid"
 
@@ -35,10 +36,19 @@ if request("startid")="" and request("endid")="" then
 end if
 
 if classname_jk<>"all" then
-	if typename_jk<>"all" then
+	if typename_jk="all" then
+		sql=sql&" and n.classname='"&classname_jk&"'"
+	elseif typename_jk<>"ÆäËü"then
 		sql=sql&" and n.classname='"&classname_jk&"' and n.typename='"&typename_jk&"'"
 	else
-		sql=sql&" and n.classname='"&classname_jk&"'"
+		dim othertype,sqltype
+		othertype = split(ifothers_jk,",")
+		sqltype = " and ("
+		for i=0 to Ubound(othertype)
+			sqltype = sqltype&" n.typename<> '"&othertype(i)&"' or"
+		next
+		sqltype = left(sqltype,len(sqltype)-3)&")"
+		sql=sql&" and n.classname='"&classname_jk&"'"&sqltype
 	end if
 end if
 

@@ -51,6 +51,16 @@ $(document).ready(function(e) {
 		Config.Changetypename("classname","typename");
 	});
 
+	$("#typename").on("change",function(e){
+		var val_typename = $(this).val();
+		if (val_typename==="ÆäËü") {
+			$(this).attr("name","nottypename");
+			$("#other_typename").attr("name","typename").show();
+		}else{
+			$(this).attr("name","typename");
+			$("#other_typename").attr("name","nottypename").hide();
+		}
+	});			
 });
 </script>
 <link href="/css/bill.css" rel="stylesheet" type="text/css">
@@ -88,6 +98,8 @@ $(document).ready(function(e) {
 		<select name="typename" id="typename"> 
         <option  value="<%=rs("typename")%>" selected><%=rs("typename")%></option> 
         </select>
+		<input type="text" id="other_typename" value="" size="20" placeholder="ÇëÌîÐ´">
+
       </td>
     </tr>
     <tr bgcolor="#F9F9F9" class=small>

@@ -5,7 +5,8 @@
 <script src="../js/config.js"></script>
 <script language = "JavaScript">
 var rolename = "<%=session("rolename")%>",
-	department = "<%=session("department")%>";
+	department = "<%=session("department")%>",
+	hidedep = false;
 
 $(document).ready(function(e) {
 	//通过自定义方法为部门选项增加部门
@@ -17,23 +18,32 @@ $(document).ready(function(e) {
 		var obj = document.getElementById("department");
 		obj.options.length = 0;
 		obj.add(new Option(department,department));
+		hidedep = true;
 	}
 	
 	//动态classname and typename
 	$("#classname").change(function(e){
-		if ($(this).val()==="案例单"){
-			var obj = document.getElementById("department");
-			obj.options.length = 0;
-			$("#department").append("<option value='all' selected>全部</option>");
-			Config.Setdepartment("department");
-		}else{
-			var obj = document.getElementById("department");
-			obj.options.length = 0;
-			obj.add(new Option(department,department));
+		if (hidedep){
+			if ($(this).val()==="案例单"){
+				var obj = document.getElementById("department");
+				obj.options.length = 0;
+				$("#department").append("<option value='all' selected>全部</option>");
+				Config.Setdepartment("department");
+			}else{
+				var obj = document.getElementById("department");
+				obj.options.length = 0;
+				obj.add(new Option(department,department));
+			}
 		}
 		$("#typename option").remove();
 		$("#typename").append("<option value='all' selected>全部</option>");
 		Config.Changetypename("classname","typename");
+	});
+	
+	$("#typename").on("change",function(e){
+		if ($(this).val()==="其它"){
+			Writeothertypename();
+		}		
 	});
 	
 	//如果单据编号字段被填入数值，则显示下单日期失效的效果及说明
@@ -62,6 +72,22 @@ $(document).ready(function(e) {
 	});
 });
 
+function Writeothertypename(){
+	var classname = $("#classname").val();
+	for (var i=0;i<Config.classnames.length;i++){
+		if(classname === Config.classnames[i].classname){
+			var othertypename="";
+			for(var j=0;j<Config.classnames[i].typename.length-1;j++){
+				othertypename +=Config.classnames[i].typename[j]+",";
+			}
+			othertypename = othertypename.substr(0,othertypename.length-1);
+			$("#ifothers").val(othertypename);
+			break;
+		}
+	}
+}
+
+
 function UnlockDepartment(){
 	var obj = document.getElementById("department");
 	obj.options.length = 0;
@@ -88,6 +114,7 @@ function GetCondition(){
 	condition.zj_pd_rk = $("#zj_pd_rk").val();
 	condition.name = encodeURI($("#name").val());
 	condition.userid = $("#userid").val();
+	condition.ifothers =encodeURI($("#ifothers").val());
 	
 	return condition	
 }
@@ -300,6 +327,7 @@ div#total{ font-size:18px; font-weight:bold}
 		<select style="width:100px"  name="typename" id="typename"> 
         <option  value="all" selected>全部</option> 
         </select>
+        <input type="text" style="display:none" value="" name="ifothers" id="ifothers">
 </td>
           </tr>
           <tr class="small">
